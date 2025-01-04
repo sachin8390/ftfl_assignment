@@ -1,0 +1,14 @@
+{
+  "hosting": {
+    "source": ".",
+    "site": "ftfl-test-site",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "frameworksBackend": {
+      "region": "asia-east1"
+    }
+  }
+}

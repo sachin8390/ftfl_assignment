@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:ui_portfolio/theme.dart';
 import 'package:ui_portfolio/utils/size_config.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -109,7 +112,7 @@ class _LandingPageState extends State<LandingPage> {
                 context.isPhone ? _wrapCenter(_hireMeButton()) : _hireMeButton(),
                 const SizedBox(height: 30),
                 context.isPhone ? _wrapCenter(_statisticsWidget()) : _statisticsWidget(),
-                SizedBox(height: 10.h),
+                context.isPhone ? SizedBox(height: 10.h) : SizedBox(height: 3.h),
                 _socialMediaSection(),
               ],
             )
@@ -180,7 +183,14 @@ class _LandingPageState extends State<LandingPage> {
         left: context.isPhone ? 0 : 20.w,
       ),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          ThemeNotifier themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
+          if (themeNotifier.themeMode == ThemeMode.light) {
+            themeNotifier.setTheme(ThemeMode.dark);
+          } else {
+            themeNotifier.setTheme(ThemeMode.light);
+          }
+          },
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.symmetric(
             vertical: 1.5.h,
@@ -263,28 +273,48 @@ class _LandingPageState extends State<LandingPage> {
       padding: EdgeInsets.only(left: 12.w),
       child: Row(
         children: [
-          Icon(
-            Icons.mail_outline,
-            size: 30,
-            color: Theme.of(context).primaryColor,
+          GestureDetector(
+            onTap: (){
+              launch("https://mail.google.com/mail/u/0/#inbox");
+            },
+            child: Icon(
+              Icons.mail_outline,
+              size: 30,
+              color: Theme.of(context).primaryColor,
+            ),
           ),
           const SizedBox(width: 10),
-          Icon(
-            Icons.call_outlined,
-            size: 30,
-            color: Theme.of(context).primaryColor,
+          GestureDetector(
+            onTap: (){
+              launch("https://github.com/");
+            },
+            child: Icon(
+              Icons.call_outlined,
+              size: 30,
+              color: Theme.of(context).primaryColor,
+            ),
           ),
           const SizedBox(width: 10),
-          Icon(
-            Icons.snapchat_outlined,
-            size: 30,
-            color: Theme.of(context).primaryColor,
+          GestureDetector(
+            onTap: (){
+              launch("https://www.snapchat.com/");
+            },
+            child: Icon(
+              Icons.snapchat_outlined,
+              size: 30,
+              color: Theme.of(context).primaryColor,
+            ),
           ),
           const SizedBox(width: 10),
-          Icon(
-            Icons.wordpress_outlined,
-            size: 30,
-            color: Theme.of(context).primaryColor,
+          GestureDetector(
+            onTap: (){
+              launch("https://www.instagram.com/accounts/login/?hl=en");
+            },
+            child: Icon(
+              Icons.wordpress_outlined,
+              size: 30,
+              color: Theme.of(context).primaryColor,
+            ),
           ),
         ],
       ),
@@ -323,5 +353,15 @@ class _LandingPageState extends State<LandingPage> {
         const SizedBox(width: 20),
       ],
     );
+  }
+
+  static void launch(String address) async {
+    Uri url = Uri.parse(address);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url); // Launch the URL
+
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
